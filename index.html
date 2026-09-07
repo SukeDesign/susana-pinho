@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Susana Pinho — Senior Webdesignerin & Frontend Developer</title>
+  <meta name="description" content="Susana Pinho — Senior Webdesignerin & Frontend Developer mit über 20 Jahren Erfahrung. UI/UX Design, Laravel, SCSS, WordPress, Essen.">
+  <meta name="keywords" content="Frontend Developer, Webdesignerin, UI/UX, Laravel, SCSS, WordPress, Essen, Susana Pinho, Susana Pinho">
+  <meta property="og:title" content="Susana Pinho — Senior Webdesignerin & Frontend Developer">
+  <meta property="og:description" content="Susana Pinho — Senior Webdesignerin & Frontend Developer mit über 20 Jahren Erfahrung.">
+  <meta property="og:image" content="https://sukedesign.github.io/sukedesign/images/dyn/susanapinho.jpg">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/x-icon" href="images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* =====================
+       TOKENS
+    ===================== */
+    :root {
+      --bg:          #0D0D0D;
+      --surface:     #161616;
+      --surface-2:   #1E1E1E;
+      --border:      #282828;
+      --text:        #EDE9E3;
+      --text-2:      #8A8580;
+      --accent:      #C4A35A;
+      --accent-dim:  rgba(196,163,90,0.10);
+      --nav-w:       272px;
+      --gap:         clamp(3rem, 8vw, 5.5rem);
+      --pad:         clamp(2rem, 6vw, 5rem);
+      --radius:      3px;
+      --ease:        0.28s ease;
+    }
+
+    /* =====================
+       RESET
+    ===================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: var(--accent); text-decoration: none; transition: opacity var(--ease); }
+    a:hover { opacity: 0.75; }
+    abbr { text-decoration: none; border-bottom: 1px dotted var(--text-2); cursor: help; }
+
+    /* =====================
+       SCROLL PROGRESS
+    ===================== */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: var(--nav-w); right: 0;
+      height: 2px;
+      background: var(--border);
+      z-index: 200;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.08s linear;
+    }
+
+    /* =====================
+       LAYOUT
+    ===================== */
+    .layout { display: flex; min-height: 100vh; }
+
+    /* =====================
+       SIDEBAR
+    ===================== */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: var(--nav-w);
+      height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2.5rem 2rem;
+      z-index: 150;
+      transition: transform var(--ease);
+    }
+
+    .brand h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .brand h1 em { font-style: italic; color: var(--accent); }
+    .brand p {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-top: 0.4rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .nav a {
+      color: var(--text-2);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.45rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: color var(--ease);
+      opacity: 1;
+    }
+    .nav a::before {
+      content: '';
+      display: block;
+      width: 1.25rem;
+      height: 1px;
+      background: var(--border);
+      transition: width var(--ease), background var(--ease);
+      flex-shrink: 0;
+    }
+    .nav a:hover, .nav a.is-active {
+      color: var(--text);
+      opacity: 1;
+    }
+    .nav a:hover::before, .nav a.is-active::before {
+      width: 2.25rem;
+      background: var(--accent);
+    }
+
+    .sidebar-foot {
+      font-size: 0.7rem;
+      color: var(--text-2);
+      line-height: 1.8;
+    }
+    .sidebar-foot a { color: var(--text-2); }
+
+    /* =====================
+       MOBILE NAV
+    ===================== */
+    .nav-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem; right: 1rem;
+      z-index: 300;
+      width: 2.5rem;
+      height: 2.5rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 18px;
+      height: 1.5px;
+      background: var(--text);
+      transition: all var(--ease);
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 140;
+    }
+
+    /* =====================
+       MAIN
+    ===================== */
+    .main { margin-left: var(--nav-w); flex: 1; min-width: 0; }
+
+    /* =====================
+       SECTIONS
+    ===================== */
+    section {
+      padding: var(--gap) var(--pad);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      font-size: 0.63rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 4vw, 2.9rem);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 2.5rem;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    /* =====================
+       HERO
+    ===================== */
+    #home {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-eyebrow {
+      font-size: 0.63rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 2.5rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.25rem, 8vw, 6rem);
+      font-weight: 600;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+    }
+    .hero-name em { font-style: italic; color: var(--accent); display: block; }
+    .hero-tagline {
+      font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+      color: var(--text-2);
+      max-width: 46ch;
+      margin-top: 1.5rem;
+      line-height: 1.75;
+    }
+    .hero-tagline strong { color: var(--text); font-weight: 400; }
+    .hero-cta {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 2.25rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.7rem 1.6rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all var(--ease);
+      border: none;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0D0D0D;
+    }
+    .btn-primary:hover { background: #d4b36a; opacity: 1; color: #0D0D0D; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--text-2); opacity: 1; color: var(--text); }
+
+    .hero-photo {
+      width: clamp(120px, 16vw, 400px);
+      height: clamp(120px, 16vw, 400px);
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      filter: grayscale(15%);
+    }
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.25rem;
+      font-weight: 600;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.63rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-top: 0.2rem;
+    }
+
+    /* =====================
+       SERVICES
+    ===================== */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .service-card {
+      background: var(--surface);
+      padding: 2rem;
+      transition: background var(--ease);
+    }
+    .service-card:hover { background: var(--surface-2); }
+    .service-icon {
+      width: 1.75rem;
+      height: 1.75rem;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      stroke-width: 1.25;
+    }
+    .service-card h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.65rem;
+    }
+    .service-card p {
+      font-size: 0.82rem;
+      color: var(--text-2);
+      line-height: 1.75;
+    }
+
+    /* =====================
+       SKILLS
+    ===================== */
+    .skills-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+    .skill-group { margin-bottom: 2rem; }
+    .skill-group h3 {
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.3rem 0.7rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--text-2);
+      transition: all var(--ease);
+      cursor: default;
+    }
+    .tag:hover {
+      color: var(--accent);
+      border-color: rgba(196,163,90,0.4);
+      background: var(--accent-dim);
+    }
+
+    /* =====================
+       WORK
+    ===================== */
+    .work-lead {
+      max-width: 60ch;
+      color: var(--text-2);
+      font-size: 0.9rem;
+      margin-bottom: 3rem;
+      line-height: 1.8;
+    }
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.75rem;
+    }
+    .work-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color var(--ease), transform var(--ease);
+    }
+    .work-card:hover { border-color: rgba(196,163,90,0.45); transform: translateY(-2px); }
+
+    /* Device mockup frame */
+    .mockup {
+      background: var(--surface-2);
+      padding: 1.25rem 1.25rem 0.75rem;
+    }
+    .mockup-laptop {
+      background: #111;
+      border-radius: 5px 5px 0 0;
+      border: 1px solid #2c2c2c;
+      border-bottom: none;
+      padding: 0.35rem 0.35rem 0;
+    }
+    .laptop-bar {
+      display: flex;
+      gap: 4px;
+      padding: 0 0.3rem 0.3rem;
+    }
+    .dot { width: 5px; height: 5px; border-radius: 50%; background: #2e2e2e; }
+    .laptop-screen {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .laptop-screen img { width: 100%; height: 100%; object-fit: cover; }
+    .screen-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #3a3a3a;
+    }
+    .laptop-stand {
+      width: 28%; height: 5px;
+      background: #1d1d1d;
+      margin: 0 auto;
+      border-radius: 0 0 3px 3px;
+    }
+    .laptop-foot {
+      width: 46%; height: 3px;
+      background: #151515;
+      margin: 0 auto;
+      border-radius: 2px;
+    }
+    .mockup-devices-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.85rem;
+      margin-top: 0.85rem;
+    }
+    .mockup-tablet-wrap {
+      width: 72px;
+      background: #111;
+      border: 1.5px solid #2c2c2c;
+      border-radius: 4px;
+      padding: 3px;
+    }
+    .tablet-screen {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .tablet-screen img { width: 100%; height: 100%; object-fit: cover; }
+    .mockup-phone-wrap {
+      width: 36px;
+      background: #111;
+      border: 1.5px solid #2c2c2c;
+      border-radius: 6px;
+      padding: 3px;
+    }
+    .mockup-phone-wrap::before {
+      content: '';
+      display: block;
+      width: 8px; height: 2px;
+      background: #2c2c2c;
+      border-radius: 1px;
+      margin: 0 auto 2px;
+    }
+    .phone-screen {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .phone-screen img { width: 100%; height: 100%; object-fit: cover; }
+
+    .work-body { padding: 1.25rem; }
+    .work-type {
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .work-body h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .work-body p {
+      font-size: 0.8rem;
+      color: var(--text-2);
+      line-height: 1.7;
+    }
+    .work-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-top: 1rem;
+    }
+    .work-tech span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      padding: 0.2rem 0.5rem;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* =====================
+       EXPERIENCE / TIMELINE
+    ===================== */
+    .timeline {
+      position: relative;
+      padding-left: 1.75rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.5rem; bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+    .tl-item {
+      position: relative;
+      margin-bottom: 2.5rem;
+    }
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -2.1rem; top: 0.45rem;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+    }
+    .tl-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-2);
+      margin-bottom: 0.25rem;
+    }
+    .tl-role {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.15rem;
+    }
+    .tl-company {
+      font-size: 0.82rem;
+      color: var(--accent);
+      margin-bottom: 0.65rem;
+    }
+    .tl-list { list-style: none; }
+    .tl-list li {
+      font-size: 0.82rem;
+      color: var(--text-2);
+      padding: 0.18rem 0 0.18rem 0;
+      position: relative;
+      line-height: 1.6;
+    }
+    .tl-list li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--border);
+    }
+    .edu-block { margin-top: 3rem; }
+    .edu-block .eyebrow { margin-bottom: 1.25rem; }
+
+    /* =====================
+       CONTACT
+    ===================== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .contact-intro {
+      font-size: 0.95rem;
+      color: var(--text-2);
+      line-height: 1.85;
+      margin-bottom: 2rem;
+    }
+    .contact-intro strong { color: var(--text); font-weight: 400; }
+    .contact-items { display: flex; flex-direction: column; gap: 1.1rem; }
+    .ci-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-2);
+      margin-bottom: 0.15rem;
+    }
+    .ci-value { font-size: 0.9rem; }
+    .ci-value a { color: var(--text); }
+    .ci-value a:hover { color: var(--accent); opacity: 1; }
+    .lang-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1.75rem;
+    }
+    .lang-pill {
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      padding: 0.28rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-2);
+    }
+    .avail-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .avail-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+    .avail-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #5cba6a;
+      animation: blink 2.2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .avail-header strong {
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .avail-card p {
+      font-size: 0.8rem;
+      color: var(--text-2);
+      line-height: 1.75;
+    }
+
+    /* =====================
+       FOOTER
+    ===================== */
+    footer {
+      padding: 1.5rem var(--pad);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: var(--text-2);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--text-2); }
+
+    /* =====================
+       RESPONSIVE
+    ===================== */
+    @media (max-width: 960px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.is-open { transform: translateX(0); }
+      .overlay { display: none; }
+      .overlay.is-open { display: block; }
+      .main { margin-left: 0; }
+      .nav-toggle { display: flex; }
+      .progress-bar { left: 0; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-photo { width: 90px; height: 90px; }
+      .skills-cols { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+    @media (max-width: 580px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .work-grid { grid-template-columns: 1fr; }
+      .hero-cta { flex-direction: column; }
+      .btn { justify-content: center; }
+      .hero-stats { gap: 1.5rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll progress -->
+  <div class="progress-bar" aria-hidden="true">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Mobile overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Mobile toggle -->
+  <button class="nav-toggle" id="navToggle" aria-label="Navigation öffnen">
+    <span></span><span></span><span></span>
+  </button>
+
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <h1>Susana <em>Pinho</em></h1>
+        <p>Web Design & Frontend</p>
+      </div>
+      <nav class="nav" aria-label="Hauptnavigation">
+        <a href="#home" class="is-active">Home</a>
+        <a href="#services">Services</a>
+        <a href="#skills">Skills</a>
+        <a href="#work">Work</a>
+        <a href="#experience">Experience</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="sidebar-foot">
+        <p><a href="legals.html">Impressum</a></p>
+        <p>&copy; 2026 Susana Pinho</p>        
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- HERO -->
+      <section id="home">
+        <div class="hero-inner">
+          <div class="hero-text">
+            <p class="hero-eyebrow">Senior Webdesignerin &amp; Frontend Developer</p>
+            <h1 class="hero-name">
+              Susana
+              <em>Pinho</em>
+            </h1>
+            <p class="hero-tagline">
+              Über <strong>20 Jahre</strong> an der Schnittstelle von kreativem Design und
+              sauberem, performantem Code. Interfaces, die Menschen wirklich
+              benutzen wollen.
+            </p>
+            <div class="hero-cta">
+              <a href="#work" class="btn btn-primary">Meine Arbeit</a>
+              <a href="#contact" class="btn btn-ghost">Kontakt aufnehmen</a>
+            </div>
+            <div class="hero-stats">
+              <div>
+                <div class="stat-num">20+</div>
+                <div class="stat-label">Jahre Erfahrung</div>
+              </div>
+              <div>
+                <div class="stat-num">37+</div>
+                <div class="stat-label">Skills</div>
+              </div>
+            </div>
+          </div>
+          <img
+            src="images/susanapinho.jpg"
+            alt="Susana Pinho"
+            class="hero-photo"
+            width="420" height="420"
+          >
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section id="services">
+        <p class="eyebrow">Was ich anbiete</p>
+        <h2 class="section-title">Services</h2>
+        <div class="services-grid">
+
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <path d="M8 21h8M12 17v4"/>
+            </svg>
+            <h3>Web Design (UI/UX)</h3>
+            <p>Saubere, moderne Interfaces mit Fokus auf Klarheit, Barrierefreiheit und Markenidentität. Von Wireframes bis zum fertigen Design System.</p>
+          </div>
+
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+            <h3>Frontend Development</h3>
+            <p>Responsive, zugängliche Websites (<abbr title="Web Content Accessibility Guidelines">WCAG</abbr>-konform) mit modernen Technologien. Sauber im Code, schnell im Browser, skalierbar im Aufbau.</p>
+          </div>
+
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+            <h3>WordPress &amp; andere CMS</h3>
+            <p>Custom Themes, October CMS Module und flexible Content-Architekturen. Einfach zu verwalten, solide im Fundament.</p>
+          </div>
+
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+            <h3>Performance &amp; SEO</h3>
+            <p>Optimierte Ladezeiten, Core Web Vitals, strukturierte SEO. Websites, die nicht nur gut aussehen, sondern auch gefunden werden.</p>
+          </div>
+
+          <div class="service-card">
+            <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <h3>Newsletter &amp; E-Mail Design</h3>
+            <p>Von der Template-Entwicklung bis zur gestalterischen Umsetzung: responsive E-Mail-Templates und Newsletter-Kampagnen.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SKILLS -->
+      <section id="skills">
+        <p class="eyebrow">Technisches Werkzeug</p>
+        <h2 class="section-title">Skills &amp; <em>Tools</em></h2>
+        <div class="skills-cols">
+          <div>
+            <div class="skill-group">
+              <h3>Design &amp; UX</h3>
+              <div class="skill-tags">
+                <span class="tag">Webseiten Design</span>
+                <span class="tag">UX / UI</span>
+                <span class="tag">Responsive</span>
+                <span class="tag">Mobile First</span>
+                <span class="tag">WCAG</span>
+                <span class="tag">Wireframing</span>
+                <span class="tag">Design Systems</span>
+                <span class="tag">Figma</span>
+                <span class="tag">Canva</span>
+                <span class="tag">Photoshop</span>
+              </div>
+            </div>
+            <div class="skill-group">
+              <h3>CMS &amp; E-Commerce</h3>
+              <div class="skill-tags">
+                <span class="tag">October CMS</span>
+                <span class="tag">WordPress</span>
+                <span class="tag">E-Commerce</span>
+                <span class="tag">SEO</span>
+                <span class="tag">Newsletter</span>
+                <span class="tag">E-Mail</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="skill-group">
+              <h3>Code</h3>
+              <div class="skill-tags">
+                <span class="tag">HTML5</span>
+                <span class="tag">CSS3</span>
+                <span class="tag">SASS / SCSS</span>
+                <span class="tag">JavaScript</span>
+                <span class="tag">jQuery</span>
+                <span class="tag">React</span>
+                <span class="tag">PHP</span>
+                <span class="tag">Twig</span>
+                <span class="tag">Laravel</span>
+                <span class="tag">Bootstrap 4 &amp; 5</span>
+                <span class="tag">MySQL</span>
+                <span class="tag">MariaDB</span>
+                <span class="tag">Node.js</span>
+                <span class="tag">Gulp.js</span>
+              </div>
+            </div>
+            <div class="skill-group">
+              <h3>Workflow</h3>
+              <div class="skill-tags">
+                <span class="tag">Git</span>
+                <span class="tag">Bitbucket</span>
+                <span class="tag">Jira</span>
+                <span class="tag">Confluence</span>
+                <span class="tag">VS Code</span>
+                <span class="tag">XAMPP</span>
+                <span class="tag">Apache</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WORK -->
+      <section id="work">
+        <p class="eyebrow">Ausgewählte Projekte</p>
+        <h2 class="section-title">Work</h2>
+        <p class="work-lead">
+          Jedes Projekt zeigt meinen Prozess: Research, Wireframes, Prototypen, Entwicklung & Implementierung.
+          Der Fokus liegt immer auf Usability, responsive moderner Ästhetik und effizientem performante Code.
+        </p>
+
+        <div class="work-grid">
+
+          <!-- PROJECT 1 -->
+          <article class="work-card">
+            <div class="mockup">
+              <div class="mockup-laptop">
+                <div class="laptop-bar">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+                <div class="laptop-screen">
+                  <!-- Desktop -->
+                  <img src="images/victorino-desktop.png" alt="Victorino Desktop">
+                </div>
+              </div>
+              <div class="laptop-stand"></div>
+              <div class="laptop-foot"></div>
+              <div class="mockup-devices-row">
+                <div class="mockup-tablet-wrap">
+                  <div class="tablet-screen">
+                    <!-- iPad -->
+                    <img src="images/victorino-ipad.png" alt="Victorino Tablet">
+                  </div>
+                </div>
+                <div class="mockup-phone-wrap">
+                  <div class="phone-screen">
+                    <!-- iPhone -->
+                    <img src="images/victorino-iphone.png" alt="Victorino Mobile">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="work-body">
+              <p class="work-type">Hospitality / E-Commerce</p>
+              <h3>CMS Hotel Themes</h3>
+              <p>Responsive Hotel-Websites mit integriertem Vouchershop, 
+                CMS-Anbindung und Newsletter-System. 
+                21 Jahre Entwicklung für die internationale Hotelbranche.
+              </p>
+              <div class="work-tech">
+                <span>October CMS</span>
+                <span>PHP</span>
+                <span>Laravel</span>                
+                <span>Twig</span>
+                <span>HTML5</span>
+                <span>SCSS</span>
+                <span>CSS3</span>
+                <span>Bootstrap</span>
+                <span>YAML</span>
+                <span>JSON</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 2 - Platzhalter -->
+          <article class="work-card">
+            <div class="mockup">
+              <div class="mockup-laptop">
+                <div class="laptop-bar">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+                <div class="laptop-screen">
+                  <!-- Desktop -->
+                  <img src="images/johanna-desktop.png" alt="Johanna Desktop">
+                </div>
+
+              </div>
+              <div class="laptop-stand"></div>
+              <div class="laptop-foot"></div>
+              <div class="mockup-devices-row">
+                <div class="mockup-tablet-wrap">
+                  <div class="tablet-screen">
+                    <!-- iPad -->
+                    <img src="images/johanna-ipad.png" alt="Johanna Tablet">
+                  </div>
+                </div>
+                <div class="mockup-phone-wrap">
+                  <div class="phone-screen">
+                    <!-- iPhone -->
+                    <img src="images/johanna-iphone.png" alt="Johanna Mobile">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="work-body">
+              <p class="work-type">Corporate / Branding</p>
+              <h3>Johanna Unterberg</h3>
+              <p>
+              In Zusammenarbeit mit der <code style="font-size:0.7rem;color:var(--accent)"></code>Diplom-Designerin Johanna Unterberg</code> 
+              habe ich ihre visuelle Gestaltung als statische Website 
+              umgesetzt. 
+              Johanna entwickelte das Layout und die gestalterische Konzeption, 
+              während ich die responsive Umsetzung und technische Realisierung übernommen habe.            
+              </p>
+              <div class="work-tech">
+                <span>HTML5</span>
+                <span>SCSS</span>
+                <span>CSS3</span>
+                <span>Responsive Webdesign</span>
+                <span>jQuery</span>
+                <span>JSON</span>
+                <span>Gulp</span>                
+                <span>Bootstrap</span>                
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 3 - Platzhalter -->
+          <article class="work-card">
+            <div class="mockup">
+              <div class="mockup-laptop">
+                <div class="laptop-bar">
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                  <div class="dot"></div>
+                </div>
+                <div class="laptop-screen">
+                  <!-- Desktop -->
+                  <img src="images/suke-wordpress-desktop.png" alt="Wordpress Projekte Desktop">
+                </div>
+              </div>
+              <div class="laptop-stand"></div>
+              <div class="laptop-foot"></div>
+              <div class="mockup-devices-row">
+                <div class="mockup-tablet-wrap">
+                  <div class="tablet-screen">
+                    <!-- iPad -->
+                    <img src="images/suke-wordpress-ipad.png" alt="Wordpress Projekte Tablet">
+                  </div>
+                </div>
+                <div class="mockup-phone-wrap">
+                  <div class="phone-screen">
+                    <!-- iPhone -->
+                    <img src="images/suke-wordpress-iphone.png" alt="Wordpress Projekte Mobile">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="work-body">
+              <p class="work-type">UI / Frontend</p>
+              <h3>SukeDesign – WordPress Portfolio</h3>
+              <p>
+                Konzeption und Umsetzung meiner eigenen Portfolio-Website mit WordPress. 
+                Die Seite präsentiert meine Leistungen als Webdesignerin und Frontend Developer mit Fokus 
+                auf modernes, responsives und barrierearmes Webdesign. 
+                
+              </p>
+              <div class="work-tech">
+                <span>WordPress</span>
+                <span>Elementor</span>
+                <span>Figma</span>
+                <span>Photoshop </span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section id="experience">
+        <p class="eyebrow">Beruflicher Werdegang</p>
+        <h2 class="section-title">Experience</h2>
+
+        <div class="timeline">
+
+          <div class="tl-item">
+            <p class="tl-period">Mai. 2025 – Heute</p>
+            <p class="tl-role">Selbständige Webdesignerin</p>
+            <p class="tl-company">sukeDesign, Essen</p>
+            <ul class="tl-list">
+              <li>CMS Websites: Konzeption, Erstellung, Anpassung und Weiterentwicklung von Themes</li>
+              <li>Pflege & Updates für bestehende Kundenwebsites</li>
+              <li>Umsetzung statische HTML-Website</li>
+            </ul>
+          </div>
+
+          <div class="tl-item">
+            <p class="tl-period">März 2004 – Feb. 2025</p>
+            <p class="tl-role">Webdesigner &amp; Frontend Developer</p>
+            <p class="tl-company">Busy Rooms GmbH, Essen</p>
+            <ul class="tl-list">
+              <li>Design und Umsetzung responsiver Webseiten für die Hotelbranche</li>
+              <li>Statische HTML Themes (themes.busyrooms.co)</li>
+              <li>Implementierung von Themes und Modulen im October CMS auf Basis von PHP, Twig &amp; Laravel</li>
+              <li>Entwicklung und Integration eines hauseigenen Vouchershops</li>
+              <li>Newsletter &amp; Voucher E-Mail Gestaltung</li>
+              <li>Agiles Projektmanagement</li>
+            </ul>
+          </div>
+          <div class="tl-item">
+            <p class="tl-period">Jan. 2003 – Jan. 2004</p>
+            <p class="tl-role">Selbständige Grafik- und Webdesignerin</p>
+            <p class="tl-company">sukeDesign, Essen</p>
+            <ul class="tl-list">
+              <li>Konzeption, Design und Entwicklung von Corporate Designs</li>
+              <li>Von der Logoerstellung bis zur fertigen Website</li>
+              <li>Kundenberatung und Projektmanagement</li>
+            </ul>
+          </div>
+          <div class="tl-item">
+            <p class="tl-period">Feb. 2000 – Dez. 2002</p>
+            <p class="tl-role">Web- und Flashdesignerin</p>
+            <p class="tl-company">Internet Agentur TVZ interactive GmbH, Meerbusch &amp; Eindhoven</p>
+            <ul class="tl-list">
+              <li>Design und Implementierung von Webseiten in HTML und CSS</li>
+              <li>Bildbearbeitung in Freehand und Photoshop</li>
+              <li>Animierte Filme und Banner in Flash und Actionscript</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="edu-block">
+          <p class="eyebrow">Weiterbildung &amp; Ausbildung</p>
+          <div class="timeline">
+            <div class="tl-item">
+              <p class="tl-period">Feb. 2025 – Aug. 2025</p>
+              <p class="tl-role">Fullstack Web Development mit CPUX-Zertifikat</p>
+              <p class="tl-company">WBS Training</p>
+            </div>
+            <div class="tl-item">
+              <p class="tl-period">Sep. 1998 – Jul. 1999</p>
+              <p class="tl-role">Ausbildung Webdesign</p>
+              <p class="tl-company">CA Medien Colleg, Essen</p>
+            </div>
+            <div class="tl-item">
+              <p class="tl-period">Aug. 1994 – Jul. 1997</p>
+              <p class="tl-role">Staatlich geprüfte gestaltungstechnische Assistentin</p>
+              <p class="tl-company">Berufskolleg Gärtnerstraße, Essen — Schwerpunkt Grafik Design</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact">
+        <p class="eyebrow">Zusammenarbeiten</p>
+        <h2 class="section-title">Kontakt</h2>
+        <div class="contact-grid">
+          <div>
+            <p class="contact-intro">
+              Ich bin <strong>offen für neue Projekte</strong>, Festanstellungen und Freelance-Aufträge.
+              Ob Corporate Website, komplexes Redesign oder anspruchsvolles Frontend-Projekt, ich
+              freue mich auf das Gespräch.
+            </p>
+            <div class="contact-items">
+              <div class="contact-item">
+                <p class="ci-label">Adresse</p>
+                <p class="ci-value">Schornstraße 17, 45128 Essen</p>
+              </div>
+              <div class="contact-item">
+                <p class="ci-label">E-Mail</p>
+                <p class="ci-value">
+                  <a href="mailto:sukedesign@outlook.de">sukedesign@outlook.de</a>
+                </p>
+              </div>
+              <div class="contact-item">
+                <p class="ci-label">Telefon</p>
+                <p class="ci-value">
+                  <a href="tel:+4917623488044">+49 176 234 88044</a>
+                </p>
+              </div>
+            </div>
+            <div class="lang-row">
+              <span class="lang-pill">Deutsch</span>
+              <span class="lang-pill">English</span>
+              <span class="lang-pill">Português</span>
+            </div>
+          </div>
+          <div>
+            <div class="avail-card">
+              <div class="avail-header">
+                <div class="avail-dot"></div>
+                <strong>Verfügbar für neue Projekte</strong>
+              </div>
+              <p>
+                Ich bin aktuell offen für Festanstellungen als Senior Frontend Developer
+                oder Webdesignerin sowie für Freelance-Projekte im Bereich UI/UX und
+                Frontend-Entwicklung. Standort Essen, Remote möglich.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <a href="#home">TOP</a>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Scroll progress
+    const fill = document.getElementById('progressFill');
+    window.addEventListener('scroll', () => {
+      const max = document.body.scrollHeight - window.innerHeight;
+      if (max > 0) fill.style.width = (window.scrollY / max * 100) + '%';
+    }, { passive: true });
+
+    // Active nav via IntersectionObserver
+    const sections = document.querySelectorAll('section[id]');
+    const links    = document.querySelectorAll('.nav a');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(a => a.classList.remove('is-active'));
+          const hit = document.querySelector(`.nav a[href="#${e.target.id}"]`);
+          if (hit) hit.classList.add('is-active');
+        }
+      });
+    }, { threshold: 0.35 });
+    sections.forEach(s => io.observe(s));
+
+    // Mobile sidebar
+    const toggle  = document.getElementById('navToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const close   = () => { sidebar.classList.remove('is-open'); overlay.classList.remove('is-open'); };
+    toggle.addEventListener('click', () => {
+      sidebar.classList.toggle('is-open');
+      overlay.classList.toggle('is-open');
+    });
+    overlay.addEventListener('click', close);
+    links.forEach(a => a.addEventListener('click', close));
+  </script>
+</body>
+</html>
