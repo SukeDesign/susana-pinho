@@ -1,5 +1,2 @@
-# robots.txt
-
-User-agent: *
-Disallow: /admin/
-Disallow: /images/
+User-agent: * 
+Disallow:
